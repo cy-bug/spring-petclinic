@@ -1,4 +1,4 @@
-# 使用一个基础的 JDK 镜像作为构建环境
+# 使用 Maven 和 OpenJDK 镜像作为构建环境
 FROM maven:3.8.5-openjdk-17 AS build
 
 # 设置工作目录
@@ -11,8 +11,24 @@ COPY mvnw .
 COPY mvnw.cmd .
 COPY .mvn/ .mvn/
 
-# # 确保 Maven Wrapper 文件具有执行权限
+# 确保 Maven Wrapper 文件具有执行权限
 RUN chmod +x mvnw
+
+# 配置 Maven 使用国内镜像和仓库源
+RUN mkdir -p /root/.m2 && \
+    echo '<mirrors>' \
+        '<mirror>' \
+            '<id>aliyun-central</id>' \
+            '<mirrorOf>central</mirrorOf>' \
+            '<url>https://maven.aliyun.com/nexus/content/repositories/central/</url>' \
+        '</mirror>' \
+        '<mirror>' \
+            '<id>aliyun-snapshots</id>' \
+            '<mirrorOf>snapshots</mirrorOf>' \
+            '<url>https://maven.aliyun.com/nexus/content/repositories/snapshots/</url>' \
+        '</mirror>' \
+    '</mirrors>' \
+    > /root/.m2/settings.xml
 
 # 执行 Maven 构建
 RUN ./mvnw clean package
