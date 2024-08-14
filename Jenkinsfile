@@ -1,5 +1,5 @@
 pipeline {
-  agent {label '47-node-01'}
+  agent {label '10-node'}
   stages {
     stage('Checkout') { // git拉取代码
 	  steps {
