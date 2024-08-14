@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Checkout') { // git拉取代码
 	  steps {
-	    git 'https://github.com/cy-bug/spring-petclinic.git'
+	    git branch: 'main', url: 'https://github.com/cy-bug/spring-petclinic.git'
 	  }
 	}
 	//stage('Build') {  // 编译、打包项目
