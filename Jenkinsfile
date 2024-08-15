@@ -21,8 +21,11 @@ pipeline {
 	stage('Push to Harbor') {  // 上传镜像至harbor
       steps {
         script {  // 'harbor-credentials' 是存储在 Jenkins 中的凭证 ID
-          docker.withRegistry('http://ops-cy-245:9998/library', 'harbor-account') { // 指定 Docker 仓库的 URL 和认证凭证
-            docker.image("ops-cy-245:9998/library/java-project:${env.BUILD_ID}").push()
+          docker.withRegistry('http://ops-cy-245:9998', 'harbor-account') { // 指定 Docker 仓库的 URL 和认证凭证
+            
+            // 打标签并推送镜像
+            sh "docker tag ops-cy-245:9998/library/java-project:${env.BUILD_ID} ops-cy-245:9998/library/java-project:${env.BUILD_ID}"
+            sh "docker push ops-cy-245:9998/library/java-project:${env.BUILD_ID}"
 		    // 将构建好的Docker镜像推送到指定的Harbor仓库。docker.image方法返回一个Docker镜像对象，push()方法将其推送到 Docker 仓库。
           }
         }
